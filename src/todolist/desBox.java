@@ -6,26 +6,18 @@
 package todolist;
 
 import java.awt.Color;
-import java.awt.Desktop;
-import java.net.URI;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.Timer;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Locale;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import java.sql.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -36,13 +28,15 @@ public class desBox extends javax.swing.JFrame {
     Timer updateTimer;
     int DELAY = 100;
 
-    public desBox(String title) {
+    public desBox(String[] data) {
         initComponents();
         setSize(600, 475);
         setLocation(400, 150);
         color.setVisible(false);
-        System.out.println(title);
+        statusBox.removeAllItems();
 
+        statusBox.addItem("Incomplete");
+        statusBox.addItem("Complete");
         updateTimer = new Timer(DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -52,114 +46,83 @@ public class desBox extends javax.swing.JFrame {
                 DateFormat formatTime = new SimpleDateFormat(formatTimeStr);
                 String formattedTimeStr = formatTime.format(currentTime);
 
-                jTime.setText(formattedTimeStr);  
+                jTime.setText(formattedTimeStr);
             }
         });
 
         updateTimer.start();
-
-        try {
-
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs2 = stmt.executeQuery(q);
-            if (rs2.next()) {
-                String themeColor = rs2.getString(1);
-
-                if ("Default".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 255, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 51, 51));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 51, 51));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.YELLOW);
-                    jLabel3.setForeground(Color.YELLOW);
-                    jLabel4.setForeground(Color.YELLOW);
-                    jLabel5.setForeground(Color.YELLOW);
-                    j1.setForeground(Color.YELLOW);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.YELLOW);
-                    j2.setForeground(Color.YELLOW);
-                }
-
-                if ("Dark Theme".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 0, 0));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
-                    jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 0, 0));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.RED);
-                    jLabel3.setForeground(Color.RED);
-                    jLabel4.setForeground(Color.RED);
-                    jLabel5.setForeground(Color.RED);
-                    j1.setForeground(Color.RED);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.RED);
-                    j2.setForeground(Color.RED);
-                }
-
-                if ("Moody Blue".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 153, 153));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 153, 153));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 153, 153));
-                    jb1.setForeground(Color.BLACK);
-                    jLabel2.setForeground(Color.WHITE);
-                    jLabel3.setForeground(Color.WHITE);
-                    jLabel4.setForeground(Color.WHITE);
-                    jLabel5.setForeground(Color.WHITE);
-                    j1.setForeground(Color.WHITE);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.WHITE);
-                    j2.setForeground(Color.WHITE);
-                }
-
-                if ("Moody Pink".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 0, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
-                    jLabel2.setForeground(Color.red);
-                    jLabel3.setForeground(Color.red);
-                    jLabel4.setForeground(Color.red);
-                    jLabel5.setForeground(Color.red);
-                    j1.setForeground(Color.red);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.red);
-                    j2.setForeground(Color.red);
-                    jPanel1.setBackground(new java.awt.Color(255, 102, 255));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(255, 102, 255));
-                    jb1.setForeground(Color.black);
-                }
-            }
-
-            String q1 = "select * from todo where title = '" + title + "'";
-            ResultSet rs1 = stmt.executeQuery(q1);
-
-            if (rs1.next()) {
-                String a = rs1.getString(1);
-                String b = rs1.getString(2);
-                String c = rs1.getString(3);
-                String d = rs1.getString(4);
-
-                j1.setText(a);
-                txtDes.setText(b);
-                j2.setText(d);
-                j3.setText(c);
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        if ("Default".equals(jMenuItem5.getText())) {
+            color.setBackground(new java.awt.Color(255, 255, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 51, 51));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.YELLOW);
+            jLabel3.setForeground(Color.YELLOW);
+            jLabel4.setForeground(Color.YELLOW);
+            jLabel5.setForeground(Color.YELLOW);
+            j1.setForeground(Color.YELLOW);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.YELLOW);
+            j2.setForeground(Color.YELLOW);
+        } else if ("Dark Theme".equals(jMenuItem6.getText())) {
+            color.setBackground(new java.awt.Color(0, 0, 0));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
+            jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 0, 0));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.RED);
+            jLabel3.setForeground(Color.RED);
+            jLabel4.setForeground(Color.RED);
+            jLabel5.setForeground(Color.RED);
+            j1.setForeground(Color.RED);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.RED);
+            j2.setForeground(Color.RED);
+        } else if ("Moody Blue".equals(jMenuItem7.getText())) {
+            color.setBackground(new java.awt.Color(0, 153, 153));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 153, 153));
+            jb1.setForeground(Color.BLACK);
+            jLabel2.setForeground(Color.WHITE);
+            jLabel3.setForeground(Color.WHITE);
+            jLabel4.setForeground(Color.WHITE);
+            jLabel5.setForeground(Color.WHITE);
+            j1.setForeground(Color.WHITE);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.WHITE);
+            j2.setForeground(Color.WHITE);
+        } else if ("Moody Pink".equals(jMenuItem8.getText())) {
+            color.setBackground(new java.awt.Color(255, 0, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
+            jLabel2.setForeground(Color.red);
+            jLabel3.setForeground(Color.red);
+            jLabel4.setForeground(Color.red);
+            jLabel5.setForeground(Color.red);
+            j1.setForeground(Color.red);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.red);
+            j2.setForeground(Color.red);
+            jPanel1.setBackground(new java.awt.Color(255, 102, 255));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(255, 102, 255));
+            jb1.setForeground(Color.black);
         }
+
+        System.out.println(data[0]);
+        j1.setText(data[0]);
+        txtDes.setText(data[1]);
+        j2.setText(data[2]);
+        j3.setText(data[3]);
+//                statusBox.
 
     }
 
@@ -212,8 +175,11 @@ public class desBox extends javax.swing.JFrame {
         j2 = new javax.swing.JLabel();
         jb1 = new javax.swing.JButton();
         color = new javax.swing.JTextField();
-        jTime = new javax.swing.JLabel();
+        statusBox = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        updateBtn = new javax.swing.JButton();
         img = new javax.swing.JLabel();
+        jTime = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -230,13 +196,6 @@ public class desBox extends javax.swing.JFrame {
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jMenu8 = new javax.swing.JMenu();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JPopupMenu.Separator();
-        jMenu9 = new javax.swing.JMenu();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jSeparator10 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -258,7 +217,7 @@ public class desBox extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(204, 204, 0));
         jLabel2.setText("TITLE/TASK");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(44, 88, 65, 32);
+        jLabel2.setBounds(44, 88, 60, 32);
 
         jLabel3.setForeground(new java.awt.Color(204, 204, 0));
         jLabel3.setText("DESCRIPTION");
@@ -268,12 +227,12 @@ public class desBox extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(204, 204, 0));
         jLabel4.setText("DUE TIME");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(47, 286, 60, 16);
+        jLabel4.setBounds(50, 280, 60, 16);
 
         jLabel5.setForeground(new java.awt.Color(204, 204, 0));
         jLabel5.setText("DUE DATE");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(47, 352, 70, 16);
+        jLabel5.setBounds(50, 320, 70, 16);
 
         j1.setForeground(new java.awt.Color(204, 204, 0));
         j1.setText("YOUR TASK NAME");
@@ -290,17 +249,17 @@ public class desBox extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtDes);
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(201, 162, 334, 83);
+        jScrollPane1.setBounds(201, 162, 334, 86);
 
         j3.setForeground(new java.awt.Color(204, 204, 0));
         j3.setText("YOUR TASK DUE DATE");
         getContentPane().add(j3);
-        j3.setBounds(201, 340, 230, 24);
+        j3.setBounds(200, 310, 230, 24);
 
         j2.setForeground(new java.awt.Color(204, 204, 0));
         j2.setText("YOUR TASK DUE TIME");
         getContentPane().add(j2);
-        j2.setBounds(201, 282, 230, 24);
+        j2.setBounds(200, 270, 230, 24);
 
         jb1.setText("Go Back");
         jb1.addActionListener(new java.awt.event.ActionListener() {
@@ -309,12 +268,40 @@ public class desBox extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jb1);
-        jb1.setBounds(440, 340, 77, 40);
+        jb1.setBounds(500, 350, 75, 40);
 
         color.setEditable(false);
         color.setBackground(new java.awt.Color(255, 255, 255));
         getContentPane().add(color);
         color.setBounds(440, 270, 80, 50);
+
+        statusBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        statusBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusBoxActionPerformed(evt);
+            }
+        });
+        getContentPane().add(statusBox);
+        statusBox.setBounds(200, 340, 130, 30);
+
+        jLabel6.setForeground(new java.awt.Color(204, 204, 0));
+        jLabel6.setText("STATUS");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(60, 350, 50, 20);
+
+        updateBtn.setText("Update");
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(updateBtn);
+        updateBtn.setBounds(400, 350, 80, 40);
+
+        img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg"))); // NOI18N
+        img.setText("jLabel2");
+        getContentPane().add(img);
+        img.setBounds(0, -20, 600, 450);
 
         jTime.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jTime.setForeground(new java.awt.Color(255, 255, 255));
@@ -323,14 +310,9 @@ public class desBox extends javax.swing.JFrame {
         getContentPane().add(jTime);
         jTime.setBounds(320, 100, 120, 40);
 
-        img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg"))); // NOI18N
-        img.setText("jLabel2");
-        getContentPane().add(img);
-        img.setBounds(0, -20, 600, 450);
-
         jMenu1.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem1.setText("Add New Task");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -350,7 +332,7 @@ public class desBox extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
         jMenu1.add(jSeparator3);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         jMenuItem3.setText("Exit");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -436,41 +418,6 @@ public class desBox extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu8.setText("About");
-
-        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem10.setText("About The Software Version");
-        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem10ActionPerformed(evt);
-            }
-        });
-        jMenu8.add(jMenuItem10);
-        jMenu8.add(jSeparator8);
-
-        jMenu9.setText("Help");
-
-        jMenuItem11.setText("How To Use?");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
-            }
-        });
-        jMenu9.add(jMenuItem11);
-        jMenu9.add(jSeparator10);
-
-        jMenuItem12.setText("How To Add or Delete Tasks?");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
-            }
-        });
-        jMenu9.add(jMenuItem12);
-
-        jMenu8.add(jMenu9);
-
-        jMenuBar1.add(jMenu8);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -521,91 +468,70 @@ public class desBox extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5MouseEntered
 
     private void jMenuItem5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem5MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 255, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 51, 51));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 51, 51));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.YELLOW);
-                    jLabel3.setForeground(Color.YELLOW);
-                    jLabel4.setForeground(Color.YELLOW);
-                    jLabel5.setForeground(Color.YELLOW);
-                    j1.setForeground(Color.YELLOW);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.YELLOW);
-                    j2.setForeground(Color.YELLOW);
-                }
-
-                if ("Dark Theme".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 0, 0));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
-                    jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 0, 0));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.RED);
-                    jLabel3.setForeground(Color.RED);
-                    jLabel4.setForeground(Color.RED);
-                    jLabel5.setForeground(Color.RED);
-                    j1.setForeground(Color.RED);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.RED);
-                    j2.setForeground(Color.RED);
-                }
-
-                if ("Moody Blue".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 153, 153));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 153, 153));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 153, 153));
-                    jb1.setForeground(Color.BLACK);
-                    jLabel2.setForeground(Color.WHITE);
-                    jLabel3.setForeground(Color.WHITE);
-                    jLabel4.setForeground(Color.WHITE);
-                    jLabel5.setForeground(Color.WHITE);
-                    j1.setForeground(Color.WHITE);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.WHITE);
-                    j2.setForeground(Color.WHITE);
-                }
-
-                if ("Moody Pink".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 0, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
-                    jLabel2.setForeground(Color.red);
-                    jLabel3.setForeground(Color.red);
-                    jLabel4.setForeground(Color.red);
-                    jLabel5.setForeground(Color.red);
-                    j1.setForeground(Color.red);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.red);
-                    j2.setForeground(Color.red);
-                    jPanel1.setBackground(new java.awt.Color(255, 102, 255));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(255, 102, 255));
-                    jb1.setForeground(Color.black);
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        if ("Default".equals(jMenuItem5.getText())) {
+            color.setBackground(new java.awt.Color(255, 255, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 51, 51));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.YELLOW);
+            jLabel3.setForeground(Color.YELLOW);
+            jLabel4.setForeground(Color.YELLOW);
+            jLabel5.setForeground(Color.YELLOW);
+            j1.setForeground(Color.YELLOW);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.YELLOW);
+            j2.setForeground(Color.YELLOW);
+        } else if ("Dark Theme".equals(jMenuItem6.getText())) {
+            color.setBackground(new java.awt.Color(0, 0, 0));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
+            jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 0, 0));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.RED);
+            jLabel3.setForeground(Color.RED);
+            jLabel4.setForeground(Color.RED);
+            jLabel5.setForeground(Color.RED);
+            j1.setForeground(Color.RED);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.RED);
+            j2.setForeground(Color.RED);
+        } else if ("Moody Blue".equals(jMenuItem7.getText())) {
+            color.setBackground(new java.awt.Color(0, 153, 153));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 153, 153));
+            jb1.setForeground(Color.BLACK);
+            jLabel2.setForeground(Color.WHITE);
+            jLabel3.setForeground(Color.WHITE);
+            jLabel4.setForeground(Color.WHITE);
+            jLabel5.setForeground(Color.WHITE);
+            j1.setForeground(Color.WHITE);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.WHITE);
+            j2.setForeground(Color.WHITE);
+        } else if ("Moody Pink".equals(jMenuItem8.getText())) {
+            color.setBackground(new java.awt.Color(255, 0, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
+            jLabel2.setForeground(Color.red);
+            jLabel3.setForeground(Color.red);
+            jLabel4.setForeground(Color.red);
+            jLabel5.setForeground(Color.red);
+            j1.setForeground(Color.red);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.red);
+            j2.setForeground(Color.red);
+            jPanel1.setBackground(new java.awt.Color(255, 102, 255));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(255, 102, 255));
+            jb1.setForeground(Color.black);
         }
     }//GEN-LAST:event_jMenuItem5MouseExited
 
@@ -625,20 +551,7 @@ public class desBox extends javax.swing.JFrame {
         txtDes.setForeground(Color.white);
         j3.setForeground(Color.YELLOW);
         j2.setForeground(Color.YELLOW);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
 
-            String q1 = "update theme set themes='Default';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MouseEntered
@@ -660,91 +573,70 @@ public class desBox extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6MouseEntered
 
     private void jMenuItem6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 255, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 51, 51));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 51, 51));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.YELLOW);
-                    jLabel3.setForeground(Color.YELLOW);
-                    jLabel4.setForeground(Color.YELLOW);
-                    jLabel5.setForeground(Color.YELLOW);
-                    j1.setForeground(Color.YELLOW);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.YELLOW);
-                    j2.setForeground(Color.YELLOW);
-                }
-
-                if ("Dark Theme".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 0, 0));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
-                    jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 0, 0));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.RED);
-                    jLabel3.setForeground(Color.RED);
-                    jLabel4.setForeground(Color.RED);
-                    jLabel5.setForeground(Color.RED);
-                    j1.setForeground(Color.RED);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.RED);
-                    j2.setForeground(Color.RED);
-                }
-
-                if ("Moody Blue".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 153, 153));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 153, 153));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 153, 153));
-                    jb1.setForeground(Color.BLACK);
-                    jLabel2.setForeground(Color.WHITE);
-                    jLabel3.setForeground(Color.WHITE);
-                    jLabel4.setForeground(Color.WHITE);
-                    jLabel5.setForeground(Color.WHITE);
-                    j1.setForeground(Color.WHITE);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.WHITE);
-                    j2.setForeground(Color.WHITE);
-                }
-
-                if ("Moody Pink".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 0, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
-                    jLabel2.setForeground(Color.red);
-                    jLabel3.setForeground(Color.red);
-                    jLabel4.setForeground(Color.red);
-                    jLabel5.setForeground(Color.red);
-                    j1.setForeground(Color.red);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.red);
-                    j2.setForeground(Color.red);
-                    jPanel1.setBackground(new java.awt.Color(255, 102, 255));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(255, 102, 255));
-                    jb1.setForeground(Color.black);
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        if ("Default".equals(jMenuItem5.getText())) {
+            color.setBackground(new java.awt.Color(255, 255, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 51, 51));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.YELLOW);
+            jLabel3.setForeground(Color.YELLOW);
+            jLabel4.setForeground(Color.YELLOW);
+            jLabel5.setForeground(Color.YELLOW);
+            j1.setForeground(Color.YELLOW);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.YELLOW);
+            j2.setForeground(Color.YELLOW);
+        } else if ("Dark Theme".equals(jMenuItem6.getText())) {
+            color.setBackground(new java.awt.Color(0, 0, 0));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
+            jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 0, 0));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.RED);
+            jLabel3.setForeground(Color.RED);
+            jLabel4.setForeground(Color.RED);
+            jLabel5.setForeground(Color.RED);
+            j1.setForeground(Color.RED);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.RED);
+            j2.setForeground(Color.RED);
+        } else if ("Moody Blue".equals(jMenuItem7.getText())) {
+            color.setBackground(new java.awt.Color(0, 153, 153));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 153, 153));
+            jb1.setForeground(Color.BLACK);
+            jLabel2.setForeground(Color.WHITE);
+            jLabel3.setForeground(Color.WHITE);
+            jLabel4.setForeground(Color.WHITE);
+            jLabel5.setForeground(Color.WHITE);
+            j1.setForeground(Color.WHITE);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.WHITE);
+            j2.setForeground(Color.WHITE);
+        } else if ("Moody Pink".equals(jMenuItem8.getText())) {
+            color.setBackground(new java.awt.Color(255, 0, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
+            jLabel2.setForeground(Color.red);
+            jLabel3.setForeground(Color.red);
+            jLabel4.setForeground(Color.red);
+            jLabel5.setForeground(Color.red);
+            j1.setForeground(Color.red);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.red);
+            j2.setForeground(Color.red);
+            jPanel1.setBackground(new java.awt.Color(255, 102, 255));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(255, 102, 255));
+            jb1.setForeground(Color.black);
         }
     }//GEN-LAST:event_jMenuItem6MouseExited
 
@@ -764,20 +656,7 @@ public class desBox extends javax.swing.JFrame {
         txtDes.setForeground(Color.white);
         j3.setForeground(Color.RED);
         j2.setForeground(Color.RED);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
 
-            String q1 = "update theme set themes='Dark Theme';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem7MouseEntered
@@ -799,91 +678,70 @@ public class desBox extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7MouseEntered
 
     private void jMenuItem7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem7MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 255, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 51, 51));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 51, 51));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.YELLOW);
-                    jLabel3.setForeground(Color.YELLOW);
-                    jLabel4.setForeground(Color.YELLOW);
-                    jLabel5.setForeground(Color.YELLOW);
-                    j1.setForeground(Color.YELLOW);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.YELLOW);
-                    j2.setForeground(Color.YELLOW);
-                }
-
-                if ("Dark Theme".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 0, 0));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
-                    jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 0, 0));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.RED);
-                    jLabel3.setForeground(Color.RED);
-                    jLabel4.setForeground(Color.RED);
-                    jLabel5.setForeground(Color.RED);
-                    j1.setForeground(Color.RED);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.RED);
-                    j2.setForeground(Color.RED);
-                }
-
-                if ("Moody Blue".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 153, 153));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 153, 153));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 153, 153));
-                    jb1.setForeground(Color.BLACK);
-                    jLabel2.setForeground(Color.WHITE);
-                    jLabel3.setForeground(Color.WHITE);
-                    jLabel4.setForeground(Color.WHITE);
-                    jLabel5.setForeground(Color.WHITE);
-                    j1.setForeground(Color.WHITE);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.WHITE);
-                    j2.setForeground(Color.WHITE);
-                }
-
-                if ("Moody Pink".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 0, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
-                    jLabel2.setForeground(Color.red);
-                    jLabel3.setForeground(Color.red);
-                    jLabel4.setForeground(Color.red);
-                    jLabel5.setForeground(Color.red);
-                    j1.setForeground(Color.red);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.red);
-                    j2.setForeground(Color.red);
-                    jPanel1.setBackground(new java.awt.Color(255, 102, 255));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(255, 102, 255));
-                    jb1.setForeground(Color.black);
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        if ("Default".equals(jMenuItem5.getText())) {
+            color.setBackground(new java.awt.Color(255, 255, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 51, 51));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.YELLOW);
+            jLabel3.setForeground(Color.YELLOW);
+            jLabel4.setForeground(Color.YELLOW);
+            jLabel5.setForeground(Color.YELLOW);
+            j1.setForeground(Color.YELLOW);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.YELLOW);
+            j2.setForeground(Color.YELLOW);
+        } else if ("Dark Theme".equals(jMenuItem6.getText())) {
+            color.setBackground(new java.awt.Color(0, 0, 0));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
+            jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 0, 0));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.RED);
+            jLabel3.setForeground(Color.RED);
+            jLabel4.setForeground(Color.RED);
+            jLabel5.setForeground(Color.RED);
+            j1.setForeground(Color.RED);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.RED);
+            j2.setForeground(Color.RED);
+        } else if ("Moody Blue".equals(jMenuItem7.getText())) {
+            color.setBackground(new java.awt.Color(0, 153, 153));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 153, 153));
+            jb1.setForeground(Color.BLACK);
+            jLabel2.setForeground(Color.WHITE);
+            jLabel3.setForeground(Color.WHITE);
+            jLabel4.setForeground(Color.WHITE);
+            jLabel5.setForeground(Color.WHITE);
+            j1.setForeground(Color.WHITE);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.WHITE);
+            j2.setForeground(Color.WHITE);
+        } else if ("Moody Pink".equals(jMenuItem8.getText())) {
+            color.setBackground(new java.awt.Color(255, 0, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
+            jLabel2.setForeground(Color.red);
+            jLabel3.setForeground(Color.red);
+            jLabel4.setForeground(Color.red);
+            jLabel5.setForeground(Color.red);
+            j1.setForeground(Color.red);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.red);
+            j2.setForeground(Color.red);
+            jPanel1.setBackground(new java.awt.Color(255, 102, 255));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(255, 102, 255));
+            jb1.setForeground(Color.black);
         }
     }//GEN-LAST:event_jMenuItem7MouseExited
 
@@ -903,20 +761,7 @@ public class desBox extends javax.swing.JFrame {
         txtDes.setForeground(Color.white);
         j3.setForeground(Color.WHITE);
         j2.setForeground(Color.WHITE);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
 
-            String q1 = "update theme set themes='Moody Blue';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem8MouseEntered
@@ -938,91 +783,70 @@ public class desBox extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8MouseEntered
 
     private void jMenuItem8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem8MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 255, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 51, 51));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 51, 51));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.YELLOW);
-                    jLabel3.setForeground(Color.YELLOW);
-                    jLabel4.setForeground(Color.YELLOW);
-                    jLabel5.setForeground(Color.YELLOW);
-                    j1.setForeground(Color.YELLOW);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.YELLOW);
-                    j2.setForeground(Color.YELLOW);
-                }
-
-                if ("Dark Theme".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 0, 0));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
-                    jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 0, 0));
-                    jb1.setForeground(Color.white);
-                    jLabel2.setForeground(Color.RED);
-                    jLabel3.setForeground(Color.RED);
-                    jLabel4.setForeground(Color.RED);
-                    jLabel5.setForeground(Color.RED);
-                    j1.setForeground(Color.RED);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.RED);
-                    j2.setForeground(Color.RED);
-                }
-
-                if ("Moody Blue".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(0, 153, 153));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
-                    jPanel1.setBackground(new java.awt.Color(0, 153, 153));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(0, 153, 153));
-                    jb1.setForeground(Color.BLACK);
-                    jLabel2.setForeground(Color.WHITE);
-                    jLabel3.setForeground(Color.WHITE);
-                    jLabel4.setForeground(Color.WHITE);
-                    jLabel5.setForeground(Color.WHITE);
-                    j1.setForeground(Color.WHITE);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.WHITE);
-                    j2.setForeground(Color.WHITE);
-                }
-
-                if ("Moody Pink".equals(themeColor)) {
-                    color.setBackground(new java.awt.Color(255, 0, 255));
-                    img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
-                    jLabel2.setForeground(Color.red);
-                    jLabel3.setForeground(Color.red);
-                    jLabel4.setForeground(Color.red);
-                    jLabel5.setForeground(Color.red);
-                    j1.setForeground(Color.red);
-                    txtDes.setForeground(Color.white);
-                    j3.setForeground(Color.red);
-                    j2.setForeground(Color.red);
-                    jPanel1.setBackground(new java.awt.Color(255, 102, 255));
-                    jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-                    jLabel1.setForeground(Color.WHITE);
-                    jb1.setBackground(new java.awt.Color(255, 102, 255));
-                    jb1.setForeground(Color.black);
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        if ("Default".equals(jMenuItem5.getText())) {
+            color.setBackground(new java.awt.Color(255, 255, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 51, 51));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.YELLOW);
+            jLabel3.setForeground(Color.YELLOW);
+            jLabel4.setForeground(Color.YELLOW);
+            jLabel5.setForeground(Color.YELLOW);
+            j1.setForeground(Color.YELLOW);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.YELLOW);
+            j2.setForeground(Color.YELLOW);
+        } else if ("Dark Theme".equals(jMenuItem6.getText())) {
+            color.setBackground(new java.awt.Color(0, 0, 0));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
+            jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 0, 0));
+            jb1.setForeground(Color.white);
+            jLabel2.setForeground(Color.RED);
+            jLabel3.setForeground(Color.RED);
+            jLabel4.setForeground(Color.RED);
+            jLabel5.setForeground(Color.RED);
+            j1.setForeground(Color.RED);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.RED);
+            j2.setForeground(Color.RED);
+        } else if ("Moody Blue".equals(jMenuItem7.getText())) {
+            color.setBackground(new java.awt.Color(0, 153, 153));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
+            jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(0, 153, 153));
+            jb1.setForeground(Color.BLACK);
+            jLabel2.setForeground(Color.WHITE);
+            jLabel3.setForeground(Color.WHITE);
+            jLabel4.setForeground(Color.WHITE);
+            jLabel5.setForeground(Color.WHITE);
+            j1.setForeground(Color.WHITE);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.WHITE);
+            j2.setForeground(Color.WHITE);
+        } else if ("Moody Pink".equals(jMenuItem8.getText())) {
+            color.setBackground(new java.awt.Color(255, 0, 255));
+            img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
+            jLabel2.setForeground(Color.red);
+            jLabel3.setForeground(Color.red);
+            jLabel4.setForeground(Color.red);
+            jLabel5.setForeground(Color.red);
+            j1.setForeground(Color.red);
+            txtDes.setForeground(Color.white);
+            j3.setForeground(Color.red);
+            j2.setForeground(Color.red);
+            jPanel1.setBackground(new java.awt.Color(255, 102, 255));
+            jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+            jLabel1.setForeground(Color.WHITE);
+            jb1.setBackground(new java.awt.Color(255, 102, 255));
+            jb1.setForeground(Color.black);
         }
     }//GEN-LAST:event_jMenuItem8MouseExited
 
@@ -1042,20 +866,7 @@ public class desBox extends javax.swing.JFrame {
         jLabel1.setForeground(Color.WHITE);
         jb1.setBackground(new java.awt.Color(255, 102, 255));
         jb1.setForeground(Color.black);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
 
-            String q1 = "update theme set themes='Moody Pink';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -1068,35 +879,121 @@ public class desBox extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/aboutsoftware.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
+    private void statusBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusBoxActionPerformed
+//        String selectedValue = (String) statusBox.getSelectedItem();
+//        System.out.println(selectedValue);
+//        String filePath = "Files/ToDos.txt"; // Replace with the actual file path
+//        String searchLine = j1.getText(); // Line to search for
+//        int updateIndex = 4; // Index to update in the line
+//        String newValue = selectedValue; // New value to replace at the specified index
+//
+//        try {
+//            // Read the contents of the file into a static array
+//            String[] lines = new String[100]; // Assuming a maximum of 100 lines
+//            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+//            String line;
+//            int lineNumber = 0;
+//            while ((line = reader.readLine()) != null && lineNumber < lines.length) {
+//                lines[lineNumber] = line;
+//                lineNumber++;
+//            }
+//            reader.close();
+//
+//            // Search for the line that matches your criteria
+//            for (int i = 0; i < lineNumber; i++) {
+//                String currentLine = lines[i];
+//                String[] values = currentLine.split(",");
+//                if (currentLine.equals(searchLine)) {
+//                    // Check if the index is within the range of values
+//                    if (updateIndex >= 0 && updateIndex < values.length) {
+//                        // Update the value at the desired index
+//                        values[updateIndex] = newValue;
+//                        // Join the values back into a single line
+//                        String updatedLine = String.join(",", values);
+//                        // Update the line in the static array
+//                        lines[i] = updatedLine;
+//                        break; // Exit the loop after updating the line
+//                    } else {
+//                        System.out.println("Index is out of range.");
+//                        return;
+//                    }
+//                }
+//            }
+//
+//            // Write the modified contents back to the file
+//            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+//            for (int i = 0; i < lineNumber; i++) {
+//                writer.write(lines[i]);
+//                writer.newLine();
+//            }
+//            writer.close();
+//
+//            System.out.println("Value updated successfully.");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/howtouse.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
 
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+
+    }//GEN-LAST:event_statusBoxActionPerformed
+
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
+          String selectedValue = (String) statusBox.getSelectedItem();
+        System.out.println(selectedValue);
+        String filePath = "Files/ToDos.txt"; // Replace with the actual file path
+        String searchLine = j1.getText(); // Line to search for
+        int updateIndex = 4; // Index to update in the line
+        String newValue = selectedValue; // New value to replace at the specified index
+
         try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/howtouse.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
+            // Read the contents of the file into a static array
+            String[] lines = new String[100]; // Assuming a maximum of 100 lines
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+            int lineNumber = 0;
+            while ((line = reader.readLine()) != null && lineNumber < lines.length) {
+                lines[lineNumber] = line;
+                lineNumber++;
+            }
+            reader.close();
+
+            // Search for the line that matches your criteria
+            for (int i = 0; i < lineNumber; i++) {
+                String currentLine = lines[i];
+                
+                if (currentLine.contains(searchLine)) {
+                    String[] values = currentLine.split(",");
+                
+                    System.out.println(currentLine);
+                    // Check if the index is within the range of values
+                    if (updateIndex >= 0 && updateIndex < values.length) {
+                        // Update the value at the desired index
+                        values[updateIndex] = newValue;
+                        // Join the values back into a single line
+                        String updatedLine = String.join(",", values);
+                        // Update the line in the static array
+                        lines[i] = updatedLine;
+                        break; // Exit the loop after updating the line
+                    } else {
+                        System.out.println("Index is out of range.");
+                        return;
+                    }
+                }
+            }
+
+            // Write the modified contents back to the file
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            for (int i = 0; i < lineNumber; i++) {
+                writer.write(lines[i]);
+                writer.newLine();
+            }
+            writer.close();
+
+            System.out.println("Value updated successfully.");
+        } catch (IOException e) {
             e.printStackTrace();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
+        }
+    }//GEN-LAST:event_updateBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1128,7 +1025,8 @@ public class desBox extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new desBox().setVisible(true);
+                String[] dummy_data = new String[]{"", "", "", ""};
+                new desBox(dummy_data).setVisible(true);
             }
         });
     }
@@ -1144,16 +1042,12 @@ public class desBox extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu8;
-    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem5;
@@ -1163,14 +1057,14 @@ public class desBox extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JLabel jTime;
     private javax.swing.JButton jb1;
+    private javax.swing.JComboBox<String> statusBox;
     private javax.swing.JTextArea txtDes;
+    private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 }

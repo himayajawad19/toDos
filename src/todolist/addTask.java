@@ -6,32 +6,18 @@
 package todolist;
 
 import java.awt.Color;
-import java.awt.Desktop;
-import java.net.URI;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import javax.swing.JOptionPane;
-import java.sql.*;
-import java.util.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.Timer;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Locale;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import java.sql.*;
 
 /**
  *
@@ -65,17 +51,7 @@ public class addTask extends javax.swing.JFrame {
 
         updateTimer.start();
 
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
+        if ("Default".equals(jMenuItem5.getText())) {
                     color.setBackground(new java.awt.Color(255, 255, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
                     jLabel1.setForeground(Color.YELLOW);
@@ -91,7 +67,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Dark Theme".equals(themeColor)) {
+        else if ("Dark Theme".equals(jMenuItem6.getText())) {
                     color.setBackground(new java.awt.Color(0, 0, 0));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
                     jLabel1.setForeground(Color.red);
@@ -107,7 +83,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Moody Blue".equals(themeColor)) {
+        else if ("Moody Blue".equals(jMenuItem7.getText())) {
                     color.setBackground(new java.awt.Color(0, 153, 153));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
                     jLabel1.setForeground(Color.WHITE);
@@ -123,7 +99,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.BLACK);
                 }
 
-                if ("Moody Pink".equals(themeColor)) {
+        else if ("Moody Pink".equals(jMenuItem8.getText())) {
                     color.setBackground(new java.awt.Color(255, 0, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
                     jLabel1.setForeground(Color.red);
@@ -137,12 +113,7 @@ public class addTask extends javax.swing.JFrame {
                     r.setForeground(Color.BLACK);
                     b.setBackground(new java.awt.Color(255, 102, 255));
                     b.setForeground(Color.BLACK);
-
                 }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-        }
     }
     int n = 1;
     int p = 1;
@@ -192,13 +163,6 @@ public class addTask extends javax.swing.JFrame {
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jMenu8 = new javax.swing.JMenu();
-        jMenuItem10 = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JPopupMenu.Separator();
-        jMenu9 = new javax.swing.JMenu();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jSeparator10 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -212,6 +176,12 @@ public class addTask extends javax.swing.JFrame {
         jLabel1.setText("TITLE");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(60, 30, 40, 16);
+
+        txtTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTitleActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtTitle);
         txtTitle.setBounds(190, 20, 340, 30);
 
@@ -241,7 +211,7 @@ public class addTask extends javax.swing.JFrame {
             }
         });
         getContentPane().add(advanced);
-        advanced.setBounds(50, 190, 220, 24);
+        advanced.setBounds(50, 190, 220, 25);
 
         setTime.setForeground(new java.awt.Color(204, 204, 0));
         setTime.setText("Set Time");
@@ -252,7 +222,7 @@ public class addTask extends javax.swing.JFrame {
             }
         });
         getContentPane().add(setTime);
-        setTime.setBounds(100, 260, 96, 24);
+        setTime.setBounds(100, 260, 96, 25);
 
         setDate.setForeground(new java.awt.Color(204, 204, 0));
         setDate.setText("Set Date");
@@ -268,12 +238,12 @@ public class addTask extends javax.swing.JFrame {
             }
         });
         getContentPane().add(setDate);
-        setDate.setBounds(100, 320, 76, 24);
+        setDate.setBounds(100, 320, 71, 25);
 
         txtDate.setDateFormatString("dd-MM-yyyy");
         txtDate.setEnabled(false);
         getContentPane().add(txtDate);
-        txtDate.setBounds(220, 320, 260, 29);
+        txtDate.setBounds(220, 320, 260, 22);
 
         r.setFont(new java.awt.Font("Lao UI", 1, 12)); // NOI18N
         r.setText("RESET");
@@ -303,7 +273,7 @@ public class addTask extends javax.swing.JFrame {
             }
         });
         getContentPane().add(b);
-        b.setBounds(390, 370, 61, 50);
+        b.setBounds(390, 370, 67, 50);
         getContentPane().add(time1);
         time1.setBounds(220, 230, 122, 80);
 
@@ -320,7 +290,7 @@ public class addTask extends javax.swing.JFrame {
             }
         });
         getContentPane().add(des);
-        des.setBounds(30, 90, 110, 24);
+        des.setBounds(30, 90, 110, 25);
 
         color.setEditable(false);
         color.setBackground(new java.awt.Color(255, 255, 255));
@@ -341,7 +311,7 @@ public class addTask extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem1.setText("Add New Task");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -361,7 +331,7 @@ public class addTask extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
         jMenu1.add(jSeparator3);
 
-        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem4.setText("Reset");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -371,7 +341,7 @@ public class addTask extends javax.swing.JFrame {
         jMenu1.add(jMenuItem4);
         jMenu1.add(jSeparator2);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         jMenuItem3.setText("Exit");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -457,478 +427,45 @@ public class addTask extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu8.setText("About");
-
-        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem10.setText("About The Software Version");
-        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem10ActionPerformed(evt);
-            }
-        });
-        jMenu8.add(jMenuItem10);
-        jMenu8.add(jSeparator8);
-
-        jMenu9.setText("Help");
-
-        jMenuItem11.setText("How To Use?");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
-            }
-        });
-        jMenu9.add(jMenuItem11);
-        jMenu9.add(jSeparator10);
-
-        jMenuItem12.setText("How To Add or Delete Tasks?");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
-            }
-        });
-        jMenu9.add(jMenuItem12);
-
-        jMenu8.add(jMenu9);
-
-        jMenuBar1.add(jMenu8);
-
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void adActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adActionPerformed
-        String format = time1.getText().substring(6);
-        String i = time1.getText().substring(0, 2);
-        int a = 0, b = 0, c = 0, d = 0;
-
-        if (advanced.isSelected()) {
+        String title = txtTitle.getText().toString();
+        String description = "", time = "", date = "";
+        int a = 0, b=0, c=0;
+        if(des.isSelected()){
             a = 1;
+            description = txtDes.getText().toString();
         }
-        if (setTime.isSelected()) {
+        if(setTime.isSelected()){
             b = 1;
+            time = time1.getText().toString();
         }
-        if (setDate.isSelected()) {
+        if(setDate.isSelected()){
             c = 1;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            date = sdf.format(txtDate.getDate());
         }
-        if (des.isSelected()) {
-            d = 1;
-        }
-
-        String addTitle = txtTitle.getText();
-
-        if (!"".equals(addTitle)) {
-
-            try {
-
-                Class.forName("java.sql.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-                Statement stmt = con.createStatement();
-
-                if (a == 1 && d == 1 && !"".equals(txtDes.getText())) {
-                    String addDes = txtDes.getText();
-
-                    if (b == 1 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','" + addDes + "','" + addDate + "','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-                    }
-
-                    if (b == 1 && c == 0) {
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','" + addDes + "','Not Set','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-                    }
-                    if (b == 0 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-
-                        String q1 = "insert into todo values('" + addTitle + "','" + addDes + "','" + addDate + "', 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-                    if (b == 0 && c == 0) {
-
-                        String q1 = "insert into todo values('" + addTitle + "','" + addDes + "', 'Not Set' , 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-                }
-
-                if (a == 1 && d == 1 && "".equals(txtDes.getText())) {
-
-                    if (b == 1 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','" + addDate + "','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-                    }
-
-                    if (b == 1 && c == 0) {
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','Not Set','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                    }
-                    if (b == 0 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','" + addDate + "', 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-                    if (b == 0 && c == 0) {
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set', 'Not Set' , 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-
-                }
-
-                if (a == 1 && d == 0) {
-
-                    if (b == 1 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','" + addDate + "','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                    }
-                    if (b == 1 && c == 0) {
-                        String addTime = time1.getText();
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','Not Set','" + addTime + "');";
-                        int rs1 = stmt.executeUpdate(q1);
-
-                        if ("AM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                        if ("PM".equals(format)) {
-                            if ("12".equals(i)) {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    String result = i + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            } else {
-                                String q2 = "select time from todo where title = '" + addTitle + "'";
-                                ResultSet rs2 = stmt.executeQuery(q2);
-                                if (rs2.next()) {
-                                    int p1 = Integer.parseInt(i);
-                                    p1 = p1 + 12;
-                                    String result = p1 + ":" + time1.getText().substring(3, 5);
-                                    String q3 = "update todo set time='" + result + "' where title = '" + addTitle + "';";
-                                    int rs3 = stmt.executeUpdate(q3);
-                                }
-                            }
-                        }
-
-                    }
-                    if (b == 0 && c == 1) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        String addDate = sdf.format(txtDate.getDate());
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set','" + addDate + "', 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-                    if (b == 0 && c == 0) {
-
-                        String q1 = "insert into todo values('" + addTitle + "','Not Set', 'Not Set' , 'Not Set' );";
-                        int rs1 = stmt.executeUpdate(q1);
-                    }
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-                    new ToDo().setVisible(true);
-                    dispose();
-                }
-
-                if (a == 0 && d == 1 && !"".equals(txtDes.getText())) {
-                    String addDes = txtDes.getText();
-
-                    String q1 = "insert into todo values('" + addTitle + "','" + addDes + "', 'Not Set' , 'Not Set' );";
-                    int rs1 = stmt.executeUpdate(q1);
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-                    new ToDo().setVisible(true);
-                    dispose();
-                }
-
-                if (a == 0 && d == 1 && "".equals(txtDes.getText())) {
-                    String addDes = txtDes.getText();
-
-                    String q1 = "insert into todo values('" + addTitle + "','Not Set', 'Not Set' , 'Not Set' );";
-                    int rs1 = stmt.executeUpdate(q1);
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-                    new ToDo().setVisible(true);
-                    dispose();
-                }
-
-                if (a == 0 && d == 0) {
-                    String q1 = "insert into todo values('" + addTitle + "','Not Set', 'Not Set' , 'Not Set' );";
-                    int rs1 = stmt.executeUpdate(q1);
-                    JOptionPane.showMessageDialog(null, "Task Added Successfully!");
-                    new ToDo().setVisible(true);
-                    dispose();
-                }
-
-                stmt.close();
-                con.close();
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error in connectivity");
+        
+        try {
+            File data = new File("Files/ToDos.txt");
+            if (!data.exists()) {
+                data.createNewFile();
             }
-        }
 
-        if ("".equals(addTitle)) {
-            JOptionPane.showMessageDialog(null, "Enter a Title");
+            FileWriter fw = new FileWriter(data.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+
+            bw.write(title + ',' + description + ',' + time + ',' + date + ','+"Incomplete");
+            bw.write("\n");
+            bw.close();
+            fw.close();
+        } catch (IOException ex) {
+            System.out.println("Error in addbutton");
         }
 
     }//GEN-LAST:event_adActionPerformed
@@ -993,17 +530,7 @@ public class addTask extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5MouseEntered
 
     private void jMenuItem5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem5MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
+        if ("Default".equals(jMenuItem5.getText())) {
                     color.setBackground(new java.awt.Color(255, 255, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
                     jLabel1.setForeground(Color.YELLOW);
@@ -1019,7 +546,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Dark Theme".equals(themeColor)) {
+                if ("Dark Theme".equals(jMenuItem6.getText())) {
                     color.setBackground(new java.awt.Color(0, 0, 0));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
                     jLabel1.setForeground(Color.red);
@@ -1035,7 +562,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Moody Blue".equals(themeColor)) {
+                if ("Moody Blue".equals(jMenuItem7.getText())) {
                     color.setBackground(new java.awt.Color(0, 153, 153));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
                     jLabel1.setForeground(Color.WHITE);
@@ -1051,7 +578,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.BLACK);
                 }
 
-                if ("Moody Pink".equals(themeColor)) {
+                if ("Moody Pink".equals(jMenuItem8.getText())) {
                     color.setBackground(new java.awt.Color(255, 0, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
                     jLabel1.setForeground(Color.red);
@@ -1066,11 +593,6 @@ public class addTask extends javax.swing.JFrame {
                     b.setBackground(new java.awt.Color(255, 102, 255));
                     b.setForeground(Color.BLACK);
                 }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_jMenuItem5MouseExited
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -1087,20 +609,6 @@ public class addTask extends javax.swing.JFrame {
         r.setForeground(Color.WHITE);
         b.setBackground(new java.awt.Color(0, 51, 51));
         b.setForeground(Color.WHITE);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q1 = "update theme set themes='Default';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MouseEntered
@@ -1120,17 +628,7 @@ public class addTask extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6MouseEntered
 
     private void jMenuItem6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
+        if ("Default".equals(jMenuItem5.getText())) {
                     color.setBackground(new java.awt.Color(255, 255, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
                     jLabel1.setForeground(Color.YELLOW);
@@ -1146,7 +644,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Dark Theme".equals(themeColor)) {
+                if ("Dark Theme".equals(jMenuItem6.getText())) {
                     color.setBackground(new java.awt.Color(0, 0, 0));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
                     jLabel1.setForeground(Color.red);
@@ -1162,7 +660,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Moody Blue".equals(themeColor)) {
+                if ("Moody Blue".equals(jMenuItem7.getText())) {
                     color.setBackground(new java.awt.Color(0, 153, 153));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
                     jLabel1.setForeground(Color.WHITE);
@@ -1178,7 +676,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.BLACK);
                 }
 
-                if ("Moody Pink".equals(themeColor)) {
+                if ("Moody Pink".equals(jMenuItem8.getText())) {
                     color.setBackground(new java.awt.Color(255, 0, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
                     jLabel1.setForeground(Color.red);
@@ -1193,11 +691,6 @@ public class addTask extends javax.swing.JFrame {
                     b.setBackground(new java.awt.Color(255, 102, 255));
                     b.setForeground(Color.BLACK);
                 }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_jMenuItem6MouseExited
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -1214,20 +707,7 @@ public class addTask extends javax.swing.JFrame {
         r.setForeground(Color.WHITE);
         b.setBackground(new java.awt.Color(0, 0, 0));
         b.setForeground(Color.WHITE);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q1 = "update theme set themes='Dark Theme';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
+        
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem7MouseEntered
@@ -1247,17 +727,7 @@ public class addTask extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7MouseEntered
 
     private void jMenuItem7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem7MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
+        if ("Default".equals(jMenuItem5.getText())) {
                     color.setBackground(new java.awt.Color(255, 255, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
                     jLabel1.setForeground(Color.YELLOW);
@@ -1273,7 +743,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Dark Theme".equals(themeColor)) {
+                if ("Dark Theme".equals(jMenuItem6.getText())) {
                     color.setBackground(new java.awt.Color(0, 0, 0));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
                     jLabel1.setForeground(Color.red);
@@ -1289,7 +759,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Moody Blue".equals(themeColor)) {
+                if ("Moody Blue".equals(jMenuItem7.getText())) {
                     color.setBackground(new java.awt.Color(0, 153, 153));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
                     jLabel1.setForeground(Color.WHITE);
@@ -1305,7 +775,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.BLACK);
                 }
 
-                if ("Moody Pink".equals(themeColor)) {
+                if ("Moody Pink".equals(jMenuItem8.getText())) {
                     color.setBackground(new java.awt.Color(255, 0, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
                     jLabel1.setForeground(Color.red);
@@ -1320,11 +790,6 @@ public class addTask extends javax.swing.JFrame {
                     b.setBackground(new java.awt.Color(255, 102, 255));
                     b.setForeground(Color.BLACK);
                 }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_jMenuItem7MouseExited
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -1341,20 +806,7 @@ public class addTask extends javax.swing.JFrame {
         r.setForeground(Color.BLACK);
         b.setBackground(new java.awt.Color(0, 153, 153));
         b.setForeground(Color.BLACK);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q1 = "update theme set themes='Moody Blue';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
+        
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem8MouseEntered
@@ -1374,17 +826,7 @@ public class addTask extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem8MouseEntered
 
     private void jMenuItem8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem8MouseExited
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q = "select * from theme;";
-            ResultSet rs1 = stmt.executeQuery(q);
-            if (rs1.next()) {
-                String themeColor = rs1.getString(1);
-
-                if ("Default".equals(themeColor)) {
+        if ("Default".equals(jMenuItem5.getText())) {
                     color.setBackground(new java.awt.Color(255, 255, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/1616109 - Copy.jpg")));
                     jLabel1.setForeground(Color.YELLOW);
@@ -1400,7 +842,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Dark Theme".equals(themeColor)) {
+                if ("Dark Theme".equals(jMenuItem6.getText())) {
                     color.setBackground(new java.awt.Color(0, 0, 0));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/—Pngtree—trendy wallpaper background design with_1160491 - Copy.png")));
                     jLabel1.setForeground(Color.red);
@@ -1416,7 +858,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.WHITE);
                 }
 
-                if ("Moody Blue".equals(themeColor)) {
+                if ("Moody Blue".equals(jMenuItem7.getText())) {
                     color.setBackground(new java.awt.Color(0, 153, 153));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/049M_crau5k_Full - Copy.jpg")));
                     jLabel1.setForeground(Color.WHITE);
@@ -1432,7 +874,7 @@ public class addTask extends javax.swing.JFrame {
                     b.setForeground(Color.BLACK);
                 }
 
-                if ("Moody Pink".equals(themeColor)) {
+                if ("Moody Pink".equals(jMenuItem8.getText())) {
                     color.setBackground(new java.awt.Color(255, 0, 255));
                     img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pawel-czerwinski-hR545CzxZxk-unsplash - Copy.jpg")));
                     jLabel1.setForeground(Color.red);
@@ -1447,11 +889,6 @@ public class addTask extends javax.swing.JFrame {
                     b.setBackground(new java.awt.Color(255, 102, 255));
                     b.setForeground(Color.BLACK);
                 }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_jMenuItem8MouseExited
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
@@ -1468,20 +905,7 @@ public class addTask extends javax.swing.JFrame {
         r.setForeground(Color.BLACK);
         b.setBackground(new java.awt.Color(255, 102, 255));
         b.setForeground(Color.BLACK);
-        try {
-            Class.forName("java.sql.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/todolist", "root", "sql");
-            Statement stmt = con.createStatement();
-
-            String q1 = "update theme set themes='Moody Pink';";
-            int rs1 = stmt.executeUpdate(q1);
-            if (rs1 == 1) {
-                JOptionPane.showMessageDialog(null, "Theme Updated successfully");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "error");
-        }
+        
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -1526,36 +950,6 @@ public class addTask extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/aboutsoftware.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
-
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/howtouse.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
-
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        try {
-            Desktop desktop = java.awt.Desktop.getDesktop();
-            URI oURL = new URI("https://dheerajgogoi.github.io/todolist/howtouse.html");
-            desktop.browse(oURL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
-
     private void rActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rActionPerformed
         txtTitle.setText(null);
         txtDes.setText(null);
@@ -1583,6 +977,10 @@ public class addTask extends javax.swing.JFrame {
         setDate.setEnabled(false);
         txtDes.setEnabled(false);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void txtTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTitleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTitleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1632,13 +1030,8 @@ public class addTask extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu8;
-    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -1648,13 +1041,11 @@ public class addTask extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JLabel jTime;
     private javax.swing.JButton r;
     private javax.swing.JCheckBox setDate;
